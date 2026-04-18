@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🍯 Honey Match — Wildflower Honey Shop</title>
+<style>
+body { font-family: sans-serif; text-align: center; background: #FFFDF7; }
+.grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; max-width: 400px; margin: 20px auto; }
+.card { aspect-ratio: 1; background: #D4880F; color: white; display: flex; align-items: center; justify-content: center; font-size: 2rem; cursor: pointer; border-radius: 8px; }
+</style>
+</head>
+<body>
+<h1>🍯 Honey Match Game</h1>
+<p>Match pairs to win a discount!</p>
+<div class="grid" id="grid"></div>
+<a href="/index.html">Back to Shop</a>
+<script>
+const emojis = ['🍯', '🍯', '🌸', '🌸', '🍀', '🍀', '🌿', '🌿'];
+const grid = document.getElementById('grid');
+emojis.sort(() => Math.random() - 0.5).forEach(e => {
+  const c = document.createElement('div');
+  c.className = 'card';
+  c.textContent = '?';
+  c.onclick = () => { c.textContent = e; };
+  grid.appendChild(c);
+});
+</script>
+</body>
+</html>

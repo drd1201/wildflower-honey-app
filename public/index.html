@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wildflower Honey Shop — Pure Artisan Honey</title>
+<style>
+:root {
+  --amber: #D4880F;
+  --amber-light: #F5C542;
+  --amber-dark: #8B5E0B;
+  --honey: #FFF3D6;
+  --cream: #FFFDF7;
+  --brown: #3E2723;
+  --brown-light: #5D4037;
+  --green: #2E7D32;
+  --red: #C62828;
+  --gray: #616161;
+  --border: #E0D5C1;
+  --shadow: 0 2px 12px rgba(0,0,0,.08);
+  --radius: 12px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: 'Segoe UI',system-ui,-apple-system,sans-serif; background: var(--cream); color: var(--brown); line-height:1.6; }
+a { color: var(--amber-dark); text-decoration:none; }
+
+header { background: linear-gradient(135deg, var(--amber-dark) 0%, var(--amber) 100%); color:#fff; padding:0; position:sticky; top:0; z-index:100; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+.header-inner { max-width:1200px; margin:0 auto; padding:16px 24px; display:flex; justify-content:space-between; align-items:center; }
+.logo { font-size:1.6rem; font-weight:800; letter-spacing:-0.5px; }
+nav { display:flex; gap:20px; align-items:center; }
+nav a { color:#fff; font-weight:600; font-size:.95rem; opacity:.9; transition:opacity .2s; }
+.cart-btn { background:rgba(255,255,255,.2); padding:8px 16px; border-radius:24px; cursor:pointer; border:none; color:#fff; font-weight:700; }
+
+.hero { background: linear-gradient(135deg, var(--honey) 0%, #FDE8A0 100%); padding:60px 24px; text-align:center; border-bottom:3px solid var(--amber-light); }
+.hero h1 { font-size:2.5rem; color:var(--amber-dark); }
+
+.section { max-width:1200px; margin:0 auto; padding:40px 24px; }
+.products { display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:24px; }
+.product-card { background:#fff; border-radius:var(--radius); box-shadow:var(--shadow); border:1px solid var(--border); overflow:hidden; }
+.product-emoji { font-size:4rem; text-align:center; padding:30px 0; background:var(--honey); }
+.product-body { padding:20px; }
+.add-btn { width:100%; background:var(--amber); color:#fff; border:none; padding:12px; border-radius:8px; font-weight:700; cursor:pointer; margin-top:10px; }
+
+.game-promo { display: inline-block; background: #fff; border: 2px solid var(--amber); padding: 10px 20px; border-radius: 30px; margin-top: 20px; text-decoration: none; font-weight: 800; color: var(--amber-dark); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">🍯 Wildflower Honey Shop</div>
+    <nav>
+      <a href="/game.html">🎮 Play & Save!</a>
+      <button class="cart-btn">🛒 Cart</button>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>Pure Artisan Honey, Delivered to You</h1>
+  <p>Hand-harvested from sustainable apiaries.</p>
+  <a href="/game.html" class="game-promo">🎮 Play Honey Match & Save $2.00! 🍯</a>
+</section>
+
+<section class="section">
+  <div class="products" id="productsGrid"></div>
+</section>
+
+<script>
+const API = '/api';
+async function loadProducts() {
+  const r = await fetch(API + '/products');
+  const products = await r.json();
+  document.getElementById('productsGrid').innerHTML = products.map(p => `
+    <div class="product-card">
+      <div class="product-emoji">${p.image}</div>
+      <div class="product-body">
+        <h3>${p.name}</h3>
+        <p>$${p.price.toFixed(2)}</p>
+        <button class="add-btn">Add to Cart</button>
+      </div>
+    </div>
+  `).join('');
+}
+loadProducts();
+</script>
+</body>
+</html>
