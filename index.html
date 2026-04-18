@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wildflower Honey Shop — Pure Artisan Honey</title>
-<script src="https://www.paypal.com/sdk/js?client-id=AbeuVcyPADfETQPoMFsoonAhho32d2Ejx1oBelG2vQuGi8D4RmInNhRcpXoQoONphngmYeCXhtTtQgIYVM&currency=USD"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD"></script>
 <style>
 :root {
   --amber: #D4880F; --amber-light: #F5C542; --amber-dark: #8B5E0B; --honey: #FFF3D6; --cream: #FFFDF7; --brown: #3E2723; --brown-light: #5D4037; --green: #2E7D32; --red: #C62828; --gray: #616161; --border: #E0D5C1; --shadow: 0 2px 12px rgba(0,0,0,.08); --radius: 12px;
@@ -36,13 +36,13 @@ nav a { color: #fff; font-weight: 600; font-size: .95rem; opacity: .9; transitio
 
 .overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:200; }
 .overlay.open { display:block; }
-.cart-drawer { position:fixed; top:0; right:-460px; width:440px; max-width:90vw; height:100dvh; background:#fff; z-index:300; transition:right .3s ease; box-shadow:-4px 0 24px rgba(0,0,0,.15); display:flex; flex-direction:column; padding-bottom:env(safe-area-inset-bottom); }
+.cart-drawer { position:fixed; top:0; right:-460px; width:440px; max-width:90vw; height:100dvh; background:#fff; z-index:300; transition:right .3s ease; box-shadow:-4px 0 24px rgba(0,0,0,.15); display:flex; flex-direction:column; padding-bottom:env(safe-area-insert-bottom); }
 .cart-drawer.open { right:0; }
 .cart-drawer-header { display:flex; align-items:center; justify-content:space-between; padding:20px; border-bottom:1px solid #eee; }
 .close-drawer { background:none; border:none; font-size:1.4rem; cursor:pointer; color:var(--brown); line-height:1; padding:4px 8px; border-radius:6px; }
 .close-drawer:hover { background:var(--honey); }
 .cart-item { display:flex; align-items:center; justify-content:space-between; padding:15px; border-bottom:1px solid #eee; }
-.qty-controls { display:flex; align-items:center; gap:10px; }
+@ty-controls { display:flex; align-items:center; gap:10px; }
 .qty-btn { width:25px; height:25px; border-radius:50%; border:1px solid var(--amber); background:none; cursor:pointer; font-weight:bold; }
 .remove-btn { color: var(--red); font-size: 0.8rem; cursor: pointer; border: none; background: none; }
 
