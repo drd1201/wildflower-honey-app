@@ -5,22 +5,66 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wildflower Honey Shop — Pure Artisan Honey</title>
 <style>
-body { font-family: system-ui, -apple-system, sans-serif; background: #FFFDF7; text-align: center; padding: 60px 20px; color: #3E2723; line-height: 1.6; }
-.card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); max-width: 600px; margin: auto; border: 2px solid #F5C542; }
-h1 { color: #D4880F; font-size: 2.5rem; margin-bottom: 10px; }
-p { font-size: 1.2rem; color: #5D4037; }
-.btn { display: inline-block; margin-top: 30px; padding: 16px 32px; background: #D4880F; color: white; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 1.1rem; transition: background 0.2s; }
-.btn:hover { background: #8B5E0B; }
-.logo { font-size: 4rem; margin-bottom: 20px; }
+:root {
+  --amber: #D4880F; --amber-light: #F5C542; --amber-dark: #8B5E0B; --honey: #FFF3D6; --cream: #FFFDF7; --brown: #3E2723; --brown-light: #5D4037; --green: #2E7D32; --red: #C62828; --gray: #616161; --border: #E0D5C1; --shadow: 0 2px 12px rgba(0,0,0,.08); --radius: 12px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--cream); color: var(--brown); line-height: 1.6; }
+a { color: var(--amber-dark); text-decoration: none; }
+
+header { background: linear-gradient(135deg, var(--amber-dark) 0%, var(--amber) 100%); color: #fff; padding: 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+.header-inner { max-width: 1200px; margin: 0 auto; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+.logo { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.5px; }
+.logo span { font-size: 1.8rem; }
+nav { display: flex; gap: 20px; align-items: center; }
+nav a { color: #fff; font-weight: 600; font-size: .95rem; opacity: .9; transition: opacity .2s; }
+.cart-btn { background: rgba(255,255,255,.2); padding: 8px 16px; border-radius: 24px; cursor: pointer; border: none; color: #fff; font-weight: 700; }
+
+.hero { background: linear-gradient(135deg, var(--honey) 0%, #FDE8A0 100%); padding: 60px 24px; text-align: center; border-bottom: 3px solid var(--amber-light); }
+.hero h1 { font-size: 2.5rem; color: var(--amber-dark); margin-bottom: 8px; }
+.hero p { font-size: 1.15rem; color: var(--brown-light); max-width: 600px; margin: 0 auto 20px; }
+.game-promo { display: inline-flex; align-items: center; gap: 10px; background: #fff; border: 2px solid var(--amber); padding: 12px 24px; border-radius: 28px; text-decoration: none; font-weight: 800; color: var(--amber-dark); }
+
+.section { max-width: 1200px; margin: 0 auto; padding: 40px 24px; }
+.products { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
+.product-card { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; border: 1px solid var(--border); transition: transform 0.2s; }
+.product-card:hover { transform: translateY(-4px); }
+.product-emoji { font-size: 4rem; text-align: center; padding: 30px 0; background: var(--honey); }
+.product-body { padding: 20px; text-align: center; }
+.price { font-size: 1.3rem; font-weight: 800; color: var(--amber-dark); margin: 10px 0; }
+.add-btn { background: var(--amber); color: #fff; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 700; cursor: pointer; width: 100%; }
+
+footer { text-align: center; padding: 40px; color: var(--gray); font-size: .85rem; border-top: 1px solid var(--border); margin-top: 40px; }
 </style>
 </head>
 <body>
-<div class="card">
-  <div class="logo">🍯</div>
-  <h1>Wildflower Honey Shop</h1>
-  <p>Welcome to our new home! We are just finishing up the final touches. Your artisan honey will be ready for order in just a few minutes.</p>
-  <p><strong>Keith and Dana</strong></p>
-  <a href="https://github.com/drd1201/wildflower-honey-app" class="btn">View Shop Project</a>
-</div>
+<header>
+  <div class="header-inner">
+    <div class="logo">🍯 Wildflower Honey Shop</div>
+    <nav>
+      <a href="/game.html">🎮 Play & Save!</a>
+      <button class="cart-btn">🛒 Cart</button>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>Pure Artisan Honey, Delivered to You</h1>
+  <p>Hand-harvested from sustainable apiaries. Every jar supports local beekeepers.</p>
+  <a href="/game.html" class="game-promo">🎮 Play Honey Match & Save $2.00! 🍯</a>
+</section>
+
+<section class="section">
+  <div class="products">
+    <div class="product-card"><div class="product-emoji">🌸</div><div class="product-body"><h3>Wildflower Honey (16 oz)</h3><p class="price">$14.99</p><button class="add-btn">Add to Cart</button></div></div>
+    <div class="product-card"><div class="product-emoji">🍀</div><div class="product-body"><h3>Clover Honey (16 oz)</h3><p class="price">$12.99</p><button class="add-btn">Add to Cart</button></div></div>
+    <div class="product-card"><div class="product-emoji">🌿</div><div class="product-body"><h3>Mānuka Honey (8 oz)</h3><p class="price">$29.99</p><button class="add-btn">Add to Cart</button></div></div>
+    <div class="product-card"><div class="product-emoji">🎁</div><div class="product-body"><h3>Honey Gift Box</h3><p class="price">$39.99</p><button class="add-btn">Add to Cart</button></div></div>
+  </div>
+</section>
+
+<footer>
+  © 2026 Wildflower Honey Shop — All rights reserved. 🐝
+</footer>
 </body>
 </html>
