@@ -7,7 +7,7 @@ from flask_cors import CORS
 from twilio.rest import Client as TwilioClient
 import paypalrestsdk
 
-# ── Configuration ──────────────────────────────────────────────────────────────────────
+# ── Configuration ─────────────────────────────────────────────────────────────────────────
 PAYPAL_CLIENT_ID = "AbeuVcyPADfETQPoMFsoonAhho32d2Ejx1oBelG2vQuGi8D4RmInNhRcpXoQoONphngmYeCXhtTtQgIYVM"
 PAYPAL_SECRET = "EMZu-ww25716GB6lh4_b-sEZYMiMo_Gn3u_-Are7mxHboXD5q1uNCK-OtmWuufFZ8iXlX0V47Uf9fOjfd"
 TWILIO_ACCOUNT_SID = "AC1aface281d36d9fd9087c7"
@@ -17,18 +17,18 @@ NOTIFICATION_PHONE_NUMBER = "+13184231053"
 
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "orders.db")
 
-# ── PayPal (LIVE) ──────────────────────────────────────────────────────────
+# ── PayPal (LIVE) ─────────────────────────────────────────────────────────────
 paypalrestsdk.configure({
     "mode": "live",
     "client_id": PAYPAL_CLIENT_ID,
     "client_secret": PAYPAL_SECRET,
 })
 
-# ── Twilio ─────────────────────────────────────────────────────────────────
+# ── Twilio ───────────────────────────────────────────────────────────────────
 
 twilio_client = TwilioClient(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
-# ── Database ─────────────────────────────────────────────────────────────────
+# ── Database ───────────────────────────────────────────────────────────────────
 def get_db():
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
@@ -65,7 +65,7 @@ def init_db():
 
 init_db()
 
-# ── Flask App ─────────────────────────────────────────────────────────────────
+# ── Flask App ───────────────────────────────────────────────────────────────────
 app = Flask(__name__, static_folder="static", static_url_path="")
 CORS(app)
 
@@ -80,12 +80,12 @@ def admin():
 @app.route("/success")
 def success_page():
     return send_from_directory("static", "success.html")
-
 @app.route("/game")
 def game_page():
     return send_from_directory("static", "game.html")
 
-# ── API: Products ──────────────────────────────────────────────────────────
+
+# ── API: Products ──────────────────────────────────────────────────────────────────
 PRODUCTS = [
     {"id": "wildflower-16", "name": "Wildflower Honey", "size": "16 oz", "price": 14.99,
      "description": "A beautiful blend of wildflower nectars with rich, complex flavor.",
@@ -93,16 +93,16 @@ PRODUCTS = [
     {"id": "clover-16", "name": "Clover Honey", "size": "16 oz", "price": 12.99,
      "description": "Classic light & sweet clover honey, perfect for everyday use.",
      "image": "🍀"},
-    {"id": "manuka-8", "name": "Mānuka Honey", "size": "8 oz", "price": 29.99,
-     "description": "Premium Mānuka honey with exceptional antibacterial properties.",
+    {"id": "manuka-8", "name": "M\u0101nuka Honey", "size": "8 oz", "price": 29.99,
+     "description": "Premium M\u0101nuka honey with exceptional antibacterial properties.",
      "image": "🌿"},
     {"id": "buckwheat-16", "name": "Buckwheat Honey", "size": "16 oz", "price": 16.99,
-     "description": "Dark, bold buckwheat honey—rich in antioxidants.",
+     "description": "Dark, bold buckwheat honey\u2014rich in antioxidants.",
      "image": "🌾"},
     {"id": "orange-16", "name": "Orange Blossom Honey", "size": "16 oz", "price": 15.99,
      "description": "Delicate citrus notes from orange blossom nectar.",
      "image": "🍊"},
-    {"id": "gift-box", "name": "Honey Gift Box", "size": "3×8 oz", "price": 39.99,
+    {"id": "gift-box", "name": "Honey Gift Box", "size": "3\u00d78 oz", "price": 39.99,
      "description": "A curated sampler of three artisan honeys in a gift box.",
      "image": "🎁"},
 ]
@@ -153,7 +153,7 @@ def create_paypal_order():
                     "shipping": f"{shipping:.2f}",
                 },
             },
-            "description": "Golden Hive Honey Co. Order",
+            "description": "Wildflower Honey Shop Order",
         }],
     })
 
@@ -223,7 +223,7 @@ def complete_order():
     sms_sent = False
     try:
         item_summary = ", ".join(
-            f"{it.get('qty',1)}× {next((p['name'] for p in PRODUCTS if p['id']==it['id']),'?')}"
+            f"{it.get('qty',1)}\u00d7 {next((p['name'] for p in PRODUCTS if p['id']==it['id']),'?')}"
             for it in items
         )
         msg_body = (
@@ -294,7 +294,7 @@ def manual_order():
     sms_sent = False
     try:
         item_summary = ", ".join(
-            f"{it.get('qty',1)}× {next((p['name'] for p in PRODUCTS if p['id']==it['id']),'?')}"
+            f"{it.get('qty',1)}\u00d7 {next((p['name'] for p in PRODUCTS if p['id']==it['id']),'?')}"
             for it in items
         )
         msg_body = (
@@ -324,7 +324,7 @@ def manual_order():
         "total": total,
     })
 
-# ── API: Admin – List Orders ───────────────────────────────────────────
+# ── API: Admin – List Orders ────────────────────────────────────────────────
 @app.route("/api/admin/orders")
 def admin_orders():
     conn = get_db()
@@ -373,7 +373,7 @@ def update_order_status(order_id):
     conn.close()
     return jsonify({"ok": True, "order_id": order_id, "order_status": new_status})
 
-# ── API: Dashboard Stats ────────────────────────────────────────────────────
+# ── API: Dashboard Stats ─────────────────────────────────────────────────────
 @app.route("/api/admin/stats")
 def admin_stats():
     conn = get_db()

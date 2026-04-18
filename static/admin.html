@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard — Golden Hive Honey Co.</title>
+    <title>Admin Dashboard — Wildflower Honey Shop</title>
     <style>
         body { font-family: sans-serif; background: #f5f5f5; margin: 0; padding: 20px; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
@@ -75,7 +75,7 @@
                     </td>
                     <td>$${o.total.toFixed(2)}</td>
                     <td><span class="status ${o.payment_status}">${o.payment_status}</span></td>
-                    <td class="${o.sms_sent ? 'sms-yes' : 'sms-no'}">${o.sms_sent ? '✓ Yes' : '✗ No'}</td>
+                    <td class="${o.sms_sent ? 'sms-yes' : 'sms-no'}">${o.sms_sent ? '\u2713 Yes' : '\u2717 No'}</td>
                     <td>${new Date(o.created_at).toLocaleDateString()}</td>
                 </tr>
             `).join('');
