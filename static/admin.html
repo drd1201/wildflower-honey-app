@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard — Golden Hive Honey Co.</title>
+    <style>
+        body { font-family: sans-serif; background: #f5f5f5; margin: 0; padding: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .stat-card h3 { margin: 0; font-size: 0.8rem; color: #666; text-transform: uppercase; }
+        .stat-card p { margin: 10px 0 0; font-size: 1.5rem; font-weight: bold; color: #D4880F; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #fafafa; font-weight: 600; color: #333; }
+        .status { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+        .status.completed { background: #e8f5e9; color: #2e7d32; }
+        .status.pending { background: #fff3e0; color: #e65100; }
+        .sms-yes { color: #2e7d32; font-weight: bold; }
+        .sms-no { color: #c62828; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🍯 Honey Order Admin</h1>
+        <a href="/">Back to Site</a>
+    </div>
+
+    <div class="stats" id="stats">
+        <div class="stat-card"><h3>Total Orders</h3><p id="totalOrders">0</p></div>
+        <div class="stat-card"><h3>Revenue</h3><p id="totalRevenue">$0.00</p></div>
+        <div class="stat-card"><h3>New Orders</h3><p id="pendingOrders">0</p></div>
+        <div class="stat-card"><h3>SMS Alerts Sent</h3><p id="smsSent">0</p></div>
+    </div>
+
+    <table id="ordersTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Customer</th>
+                <th>Total</th>
+                <th>Payment</th>
+                <th>SMS Sent</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody id="ordersBody">
+            <tr><td colspan="6" style="text-align:center;">Loading orders...</td></tr>
+        </tbody>
+    </table>
+
+    <script>
+        async function loadDashboard() {
+            const statsRes = await fetch('/api/admin/stats');
+            const stats = await statsRes.json();
+            document.getElementById('totalOrders').textContent = stats.total_orders;
+            document.getElementById('totalRevenue').textContent = '$' + stats.total_revenue.toFixed(2);
+            document.getElementById('pendingOrders').textContent = stats.pending_orders;
+            document.getElementById('smsSent').textContent = stats.sms_notifications_sent;
+
+            const ordersRes = await fetch('/api/admin/orders');
+            const orders = await ordersRes.json();
+            const body = document.getElementById('ordersBody');
+            if (orders.length === 0) {
+                body.innerHTML = '<tr><td colspan="6" style="text-align:center;">No orders yet.</td></tr>';
+                return;
+            }
+            body.innerHTML = orders.map(o => `
+                <tr>
+                    <td>#${o.id}</td>
+                    <td>
+                        <strong>${o.customer_name}</strong><br>
+                        <small>${o.email}</small>
+                    </td>
+                    <td>$${o.total.toFixed(2)}</td>
+                    <td><span class="status ${o.payment_status}">${o.payment_status}</span></td>
+                    <td class="${o.sms_sent ? 'sms-yes' : 'sms-no'}">${o.sms_sent ? '✓ Yes' : '✗ No'}</td>
+                    <td>${new Date(o.created_at).toLocaleDateString()}</td>
+                </tr>
+            `).join('');
+        }
+        loadDashboard();
+        setInterval(loadDashboard, 10000);
+    </script>
+</body>
+</html>
