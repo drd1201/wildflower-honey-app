@@ -1,7 +1,4 @@
 import os
-import sqlite3
-import json
-import datetime
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from twilio.rest import Client as TwilioClient
@@ -18,8 +15,6 @@ TWILIO_AUTH_TOKEN = "8514c1e9e2a3c0938e4f0fb8e7"
 TWILIO_PHONE_NUMBER = "+18556838803"
 NOTIFICATION_PHONE_NUMBER = "+13184231053"
 
-DB_PATH = "/tmp/orders.db"
-
 paypalrestsdk.configure({
     "mode": "live",
     "client_id": PAYPAL_CLIENT_ID,
@@ -27,19 +22,6 @@ paypalrestsdk.configure({
 })
 
 twilio_client = TwilioClient(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-
-def get_db():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
-
-def init_db():
-    conn = get_db()
-    conn.execute("CREATE TABLE IF NOT EXISTS orders (id INTEGER PRIMARY KEY AUTOINCREMENT, customer_name TEXT, email TEXT, phone TEXT, address TEXT, items TEXT, total REAL, payment_status TEXT, created_at TEXT DEFAULT (datetime('now')))")
-    conn.commit()
-    conn.close()
-
-if not os.path.exists(DB_PATH): init_db()
 
 @app.route("/api/products")
 def get_products():
@@ -59,8 +41,5 @@ def manual_order():
     except: pass
     return jsonify({"order_id": "M-123", "sms_sent": True})
 
-@app.route("/api/admin/stats")
-def admin_stats():
-    return jsonify({"total_orders": 0, "total_revenue": 0.0, "pending_orders": 0, "sms_notifications_sent": 0})
-
-if __name__ == "__main__": app.run()
+@app.route("/api/health")
+def health(): return jsonify({"status": "ok"})
