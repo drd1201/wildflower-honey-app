@@ -82,7 +82,6 @@ def success_page():
 def game_page():
     return send_from_directory(app.static_folder, "game.html")
 
-# API routes...
 PRODUCTS = [
     {"id": "wildflower-16", "name": "Wildflower Honey", "size": "16 oz", "price": 14.99, "description": "A beautiful blend of wildflower nectars.", "image": "🌸"},
     {"id": "clover-16", "name": "Clover Honey", "size": "16 oz", "price": 12.99, "description": "Classic light & sweet clover honey.", "image": "🍀"},
@@ -108,6 +107,32 @@ def create_paypal_order():
         approval_url = next((link.href for link in payment.links if link.rel == "approval_url"), None)
         return jsonify({"paypal_order_id": payment.id, "approval_url": approval_url, "total": total})
     return jsonify({"error": payment.error}), 500
+
+@app.route("/api/orders/complete", methods=["POST"])
+def complete_order():
+    data = request.json
+    paypal_payment_id = data.get("paymentId")
+    payer_id = data.get("PayerID")
+    customer = data.get("customer", {})
+    items = data.get("items", [])
+    payment = paypalrestsdk.Payment.find(paypal_payment_id)
+    if payment.execute({"payer_id": payer_id}):
+        capture_id = payment.transactions[0].related_resources[0].sale.id
+        payment_status = "completed"
+    else:
+        capture_id = None
+        payment_status = "failed"
+    subtotal = sum(next((p["price"] for p in PRODUCTS if p["id"] == it["id"]), 0) * int(it.get("qty", 1)) for it in items)
+    total = round(subtotal + (0 if subtotal >= 50 else 7.99), 2)
+    conn = get_db()
+    cur = conn.execute("INSERT INTO orders (customer_name, email, phone, address, city, state, zip_code, items, subtotal, shipping, total, paypal_order_id, paypal_capture_id, payment_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (customer.get("name", ""), customer.get("email", ""), customer.get("phone", ""), customer.get("address", ""), customer.get("city", ""), customer.get("state", ""), customer.get("zip", ""), json.dumps(items), subtotal, total-subtotal, total, paypal_payment_id, capture_id, payment_status))
+    order_id = cur.lastrowid
+    conn.commit()
+    conn.close()
+    try:
+        twilio_client.messages.create(body=f"🍯 New Order #{order_id}! From {customer.get('name')}. Total: ${total:.2f}", from_=TWILIO_PHONE_NUMBER, to=NOTIFICATION_PHONE_NUMBER)
+    except: pass
+    return jsonify({"order_id": order_id, "payment_status": payment_status, "sms_sent": True, "total": total})
 
 @app.route("/api/orders/manual", methods=["POST"])
 def manual_order():
