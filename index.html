@@ -36,8 +36,11 @@ nav a { color: #fff; font-weight: 600; font-size: .95rem; opacity: .9; transitio
 
 .overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:200; }
 .overlay.open { display:block; }
-.cart-drawer { position:fixed; top:0; right:-460px; width:440px; max-width:90vw; height:100vh; background:#fff; z-index:300; transition:right .3s ease; box-shadow:-4px 0 24px rgba(0,0,0,.15); display:flex; flex-direction:column; }
+.cart-drawer { position:fixed; top:0; right:-460px; width:440px; max-width:90vw; height:100dvh; background:#fff; z-index:300; transition:right .3s ease; box-shadow:-4px 0 24px rgba(0,0,0,.15); display:flex; flex-direction:column; padding-bottom:env(safe-area-inset-bottom); }
 .cart-drawer.open { right:0; }
+.cart-drawer-header { display:flex; align-items:center; justify-content:space-between; padding:20px; border-bottom:1px solid #eee; }
+.close-drawer { background:none; border:none; font-size:1.4rem; cursor:pointer; color:var(--brown); line-height:1; padding:4px 8px; border-radius:6px; }
+.close-drawer:hover { background:var(--honey); }
 .cart-item { display:flex; align-items:center; justify-content:space-between; padding:15px; border-bottom:1px solid #eee; }
 .qty-controls { display:flex; align-items:center; gap:10px; }
 .qty-btn { width:25px; height:25px; border-radius:50%; border:1px solid var(--amber); background:none; cursor:pointer; font-weight:bold; }
@@ -70,11 +73,11 @@ nav a { color: #fff; font-weight: 600; font-size: .95rem; opacity: .9; transitio
 
 <div class="overlay" id="overlay" onclick="toggleCart(false)"></div>
 <div class="cart-drawer" id="cartDrawer">
-  <div style="padding:20px; border-bottom:1px solid #eee;"><h2>Your Cart</h2></div>
+  <div class="cart-drawer-header"><h2>Your Cart</h2><button class="close-drawer" onclick="toggleCart(false)">&#x2715;</button></div>
   <div id="cartItems" style="flex:1; overflow-y:auto;"></div>
   <div id="cartFooter" style="padding:20px; border-top:2px solid var(--honey);">
     <div id="totalDisplay" style="font-weight:800; font-size:1.2rem; margin-bottom:15px;"></div>
-    <div id="paypal-button-container"></div>
+    <div id="paypal-button-container" style="min-height:150px;"></div>
   </div>
 </div>
 
