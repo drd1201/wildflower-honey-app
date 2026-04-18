@@ -7,7 +7,7 @@ from flask_cors import CORS
 from twilio.rest import Client as TwilioClient
 import paypalrestsdk
 
-# ── Configuration ────────────────────────────────────────────────────────────
+# ── Configuration ──────────────────────────────────────────────────────────────────────
 PAYPAL_CLIENT_ID = "AbeuVcyPADfETQPoMFsoonAhho32d2Ejx1oBelG2vQuGi8D4RmInNhRcpXoQoONphngmYeCXhtTtQgIYVM"
 PAYPAL_SECRET = "EMZu-ww25716GB6lh4_b-sEZYMiMo_Gn3u_-Are7mxHboXD5q1uNCK-OtmWuufFZ8iXlX0V47Uf9fOjfd"
 TWILIO_ACCOUNT_SID = "AC1aface281d36d9fd9087c7"
@@ -17,18 +17,18 @@ NOTIFICATION_PHONE_NUMBER = "+13184231053"
 
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "orders.db")
 
-# ── PayPal (LIVE) ────────────────────────────────────────────────────
+# ── PayPal (LIVE) ──────────────────────────────────────────────────────────
 paypalrestsdk.configure({
     "mode": "live",
     "client_id": PAYPAL_CLIENT_ID,
     "client_secret": PAYPAL_SECRET,
 })
 
-# ── Twilio ─────────────────────────────────────────────────────────
+# ── Twilio ─────────────────────────────────────────────────────────────────
 
 twilio_client = TwilioClient(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
-# ── Database ─────────────────────────────────────────────────────────
+# ── Database ─────────────────────────────────────────────────────────────────
 def get_db():
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
@@ -65,7 +65,7 @@ def init_db():
 
 init_db()
 
-# ── Flask App ─────────────────────────────────────────────────────────
+# ── Flask App ─────────────────────────────────────────────────────────────────
 app = Flask(__name__, static_folder="static", static_url_path="")
 CORS(app)
 
@@ -81,7 +81,11 @@ def admin():
 def success_page():
     return send_from_directory("static", "success.html")
 
-# ── API: Products ────────────────────────────────────────────────────────
+@app.route("/game")
+def game_page():
+    return send_from_directory("static", "game.html")
+
+# ── API: Products ──────────────────────────────────────────────────────────
 PRODUCTS = [
     {"id": "wildflower-16", "name": "Wildflower Honey", "size": "16 oz", "price": 14.99,
      "description": "A beautiful blend of wildflower nectars with rich, complex flavor.",
@@ -107,7 +111,7 @@ PRODUCTS = [
 def get_products():
     return jsonify(PRODUCTS)
 
-# ── API: Create PayPal Order ───────────────────────────────────────────────────
+# ── API: Create PayPal Order ───────────────────────────────────────────────
 @app.route("/api/orders/create-paypal", methods=["POST"])
 def create_paypal_order():
     data = request.json
@@ -167,7 +171,7 @@ def create_paypal_order():
     else:
         return jsonify({"error": payment.error}), 500
 
-# ── API: Capture / Complete Order ────────────────────────────────────────────────────
+# ── API: Capture / Complete Order ──────────────────────────────────────────
 @app.route("/api/orders/complete", methods=["POST"])
 def complete_order():
     data = request.json
@@ -320,7 +324,7 @@ def manual_order():
         "total": total,
     })
 
-# ── API: Admin – List Orders ─────────────────────────────────────
+# ── API: Admin – List Orders ───────────────────────────────────────────
 @app.route("/api/admin/orders")
 def admin_orders():
     conn = get_db()
@@ -353,7 +357,7 @@ def admin_orders():
         })
     return jsonify(orders)
 
-# ── API: Admin – Update Order Status ─────────────────────────────────────
+# ── API: Admin – Update Order Status ─────────────────────────────────────────
 @app.route("/api/admin/orders/<int:order_id>/status", methods=["PATCH"])
 def update_order_status(order_id):
     data = request.json
@@ -369,7 +373,7 @@ def update_order_status(order_id):
     conn.close()
     return jsonify({"ok": True, "order_id": order_id, "order_status": new_status})
 
-# ── API: Dashboard Stats ──────────────────────────────────────────────
+# ── API: Dashboard Stats ────────────────────────────────────────────────────
 @app.route("/api/admin/stats")
 def admin_stats():
     conn = get_db()
