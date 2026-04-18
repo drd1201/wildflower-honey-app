@@ -120,6 +120,36 @@ footer { text-align:center; padding:30px; color:var(--gray); font-size:.85rem; b
   .products { grid-template-columns:1fr; }
   .form-grid { grid-template-columns:1fr; }
 }
+
+/* Game Promo */
+.game-nav-link {
+  background: rgba(255,255,255,.2);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: .85rem;
+  animation: gamePulse 2s infinite;
+}
+.game-nav-link:hover { background: rgba(255,255,255,.35); }
+@keyframes gamePulse { 0%,100%{opacity:1} 50%{opacity:.75} }
+.game-promo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #fff 0%, var(--honey) 100%);
+  border: 2px solid var(--amber-light);
+  padding: 12px 24px;
+  border-radius: 28px;
+  margin-top: 16px;
+  box-shadow: 0 4px 16px rgba(212,136,15,.2);
+  transition: transform .2s, box-shadow .2s;
+  text-decoration: none;
+  color: var(--brown);
+}
+.game-promo:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212,136,15,.3); }
+.game-promo .promo-icon { font-size: 1.6rem; }
+.game-promo .promo-text { text-align: left; }
+.game-promo .promo-title { font-weight: 800; color: var(--amber-dark); font-size: .95rem; }
+.game-promo .promo-sub { font-size: .8rem; color: var(--brown-light); }
 </style>
 </head>
 <body>
@@ -131,6 +161,7 @@ footer { text-align:center; padding:30px; color:var(--gray); font-size:.85rem; b
     <div class="logo"><span>🍯</span> Golden Hive Honey Co.</div>
     <nav>
       <a href="/admin">Admin Dashboard</a>
+      <a href="/game" class="game-nav-link">🎮 Play & Save!</a>
       <span class="live-badge"><span class="live-dot"></span>LIVE</span>
       <button class="cart-btn" onclick="toggleCart()">
         🛒 Cart <span class="cart-count" id="cartCount">0</span>
@@ -143,6 +174,15 @@ footer { text-align:center; padding:30px; color:var(--gray); font-size:.85rem; b
   <h1>Pure Artisan Honey, Delivered to You</h1>
   <p>Hand-harvested from sustainable apiaries. Every jar supports local beekeepers and healthy bee populations.</p>
   <div class="hero-badge">🐝 100% Raw & Unfiltered</div>
+  <br>
+  <a href="/game" class="game-promo">
+    <span class="promo-icon">🎮</span>
+    <span class="promo-text">
+      <span class="promo-title">Play Honey Match & Save!</span><br>
+      <span class="promo-sub">Match the honey jars — earn up to $2 off your order</span>
+    </span>
+    <span class="promo-icon">🍯</span>
+  </a>
 </section>
 
 <section class="section">
