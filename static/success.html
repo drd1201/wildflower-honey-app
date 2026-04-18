@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Successful — Golden Hive Honey Co.</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 50px; background: #FFFDF7; color: #3E2723; }
+        .card { max-width: 500px; margin: 0 auto; background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); border: 1px solid #E0D5C1; }
+        h1 { color: #D4880F; }
+        .emoji { font-size: 4rem; margin-bottom: 20px; }
+        .btn { display: inline-block; margin-top: 20px; padding: 12px 24px; background: #D4880F; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; }
+        .sms-badge { background: #E8F5E9; color: #2E7D32; padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; display: inline-block; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="emoji">🍯</div>
+        <h1>Order Successful!</h1>
+        <p>Thank you for your purchase. We have received your order for Wildflower Honey.</p>
+        <div id="orderDetails"></div>
+        <div class="sms-badge">✅ Shipping alert sent to the team</div>
+        <br>
+        <a href="/" class="btn">Return to Shop</a>
+    </div>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const orderId = params.get('order_id');
+        const total = params.get('total');
+        if (orderId) {
+            document.getElementById('orderDetails').innerHTML = `<p>Order ID: <strong>#${orderId}</strong><br>Total Paid: <strong>$${total}</strong></p>`;
+        }
+    </script>
+</body>
+</html>
