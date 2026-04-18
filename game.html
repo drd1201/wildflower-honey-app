@@ -5,28 +5,89 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>🍯 Honey Match — Wildflower Honey Shop</title>
 <style>
-body { font-family: 'Segoe UI', sans-serif; text-align: center; background: #FFFDF7; padding: 50px 20px; color: #3E2723; }
-.grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; max-width: 450px; margin: 30px auto; }
-.card { aspect-ratio: 1; background: #D4880F; color: white; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; cursor: pointer; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.1s; }
-.card:active { transform: scale(0.95); }
-.back-btn { display: inline-block; margin-top: 30px; color: #D4880F; font-weight: 700; text-decoration: none; border: 2px solid #D4880F; padding: 10px 25px; border-radius: 25px; }
+  :root { --amber: #D4880F; --honey: #FFF3D6; --cream: #FFFDF7; --brown: #3E2723; }
+  body { font-family: 'Segoe UI', sans-serif; text-align: center; background: var(--cream); padding: 20px; color: var(--brown); }
+  #game { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; max-width: 500px; margin: 20px auto; }
+  .tile { width: 100%; aspect-ratio: 1; position: relative; cursor: pointer; }
+  .tile img { position: absolute; width: 100%; height: 100%; object-fit: contain; border-radius: 8px; background: white; border: 2px solid var(--amber); box-sizing: border-box; transition: 0.3s; }
+  #status { font-weight: bold; font-size: 1.2rem; margin: 20px 0; color: var(--amber-dark); }
+  button { padding: 12px 24px; font-size: 16px; margin: 10px; border: none; border-radius: 30px; background-color: var(--amber); color: white; cursor: pointer; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+  .back-link { display:block; margin-top:20px; color: var(--amber); font-weight: 700; text-decoration: none; }
 </style>
 </head>
 <body>
-<h1>🍯 Honey Match Game</h1>
-<p>Match the jars to win a free sample or discount!</p>
-<div class="grid" id="grid"></div>
-<a href="/index.html" class="back-btn">← Back to Shop</a>
+  <h2>🍯 Honey Match</h2>
+  <p>Match pairs to find the honey jar. 5 misses allowed!<br>Win and get $1 off (2x max). Email screenshot to: <strong>drd1201@gmail.com</strong></p>
+  
+  <div id="status">Loading game...</div>
+  <div id="game"></div>
+  
+  <div id="buttons">
+    <button onclick="revealAll()">👀 Reveal All</button>
+    <button onclick="build()">↻️ Restart</button>
+  </div>
+  
+  <a href="/" class="back-link">← Back to Shop</a>
+
 <script>
-const emojis = ['🍯', '🍯', '🌸', '🌸', '🍀', '🍀', '🌿', '🌿', '🌾', '🌾', '🍊', '🍊', '🎁', '🎁', '🐝', '🐝'];
-const grid = document.getElementById('grid');
-emojis.sort(() => Math.random() - 0.5).forEach(e => {
-  const c = document.createElement('div');
-  c.className = 'card';
-  c.textContent = '?';
-  c.onclick = () => { if(c.textContent==='?') c.textContent = e; else c.textContent = '?'; };
-  grid.appendChild(c);
-});
+(function(){
+  const game = document.getElementById("game");
+  const status = document.getElementById("status");
+  const cover = "https://cdn-icons-png.flaticon.com/512/616/616408.png";
+  const honey = "https://em-content.zobj.net/thumbs/240/apple/354/honey-pot_1f36f.png";
+  const imgs = [
+    "https://cdn-icons-png.flaticon.com/512/616/616554.png", "https://cdn-icons-png.flaticon.com/512/616/616601.png",
+    "https://cdn-icons-png.flaticon.com/512/616/616639.png", "https://cdn-icons-png.flaticon.com/512/616/616658.png",
+    "https://cdn-icons-png.flaticon.com/512/616/616675.png", "https://cdn-icons-png.flaticon.com/512/616/616683.png",
+    "https://cdn-icons-png.flaticon.com/512/616/616726.png", "https://cdn-icons-png.flaticon.com/512/616/616744.png",
+    "https://cdn-icons-png.flaticon.com/512/616/616740.png", "https://cdn-icons-png.flaticon.com/512/616/616705.png",
+    "https://cdn-icons-png.flaticon.com/512/616/616720.png"
+  ];
+
+  let deck, flipped = [], misses = 0;
+  const maxMisses = 5;
+
+  function shuffle(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  window.build = function(){
+    game.innerHTML = ""; flipped = []; misses = 0;
+    status.textContent = `Find the honey jars! ${maxMisses} misses allowed.`;
+    const pairs = shuffle([...imgs.slice(0, 11).flatMap(i => [i, i]), honey, honey, cover]).slice(0, 25);
+    pairs.forEach(img => {
+      const tile = document.createElement("div");
+      tile.className = "tile";
+      const el = document.createElement("img");
+      el.src = cover; el.dataset.real = img;
+      el.onclick = () => flip(el, img);
+      tile.appendChild(el); game.appendChild(tile);
+    });
+  };
+
+  function flip(el, val){
+    if (el.dataset.flipped === "true" || flipped.length >= 2) return;
+    el.src = val; el.dataset.flipped = "true"; flipped.push(el);
+    if (flipped.length === 2) {
+      setTimeout(() => {
+        const [a, b] = flipped;
+        if (a.src !== b.src) {
+          misses++;
+          if (misses >= maxMisses) status.textContent = "😢 Game Over! Try again.";
+          else { status.textContent = `No match! ${maxMisses - misses} left.`; a.src = b.src = cover; a.dataset.flipped = b.dataset.flipped = "false"; }
+        } else if (a.src.includes("honey")) { status.textContent = "🍯 YOU FOUND THE HONEY! YOU WIN!"; }
+        flipped = [];
+      }, 600);
+    }
+  }
+
+  window.revealAll = function(){ document.querySelectorAll('.tile img').forEach(i => i.src = i.dataset.real); };
+  build();
+})();
 </script>
 </body>
 </html>
