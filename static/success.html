@@ -11,6 +11,7 @@
         .emoji { font-size: 4rem; margin-bottom: 20px; }
         .btn { display: inline-block; margin-top: 20px; padding: 12px 24px; background: #D4880F; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; }
         .sms-badge { background: #E8F5E9; color: #2E7D32; padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; display: inline-block; margin-top: 10px; }
+        .sms-badge.error { background: #FFEBEE; color: #C62828; }
     </style>
 </head>
 <body>
@@ -19,7 +20,7 @@
         <h1>Order Successful!</h1>
         <p>Thank you for your purchase. We have received your order for Wildflower Honey.</p>
         <div id="orderDetails"></div>
-        <div class="sms-badge">✅ Shipping alert sent to the team</div>
+        <div id="smsBadge"><span class="sms-badge">⏳ Notifying shop owner...</span></div>
         <br>
         <a href="/" class="btn">Return to Shop</a>
     </div>
@@ -28,7 +29,28 @@
         const orderId = params.get('order_id');
         const total = params.get('total');
         if (orderId) {
-            document.getElementById('orderDetails').innerHTML = `<p>Order ID: <strong>#${orderId}</strong><br>Total Paid: <strong>$${total}</strong></p>`;
+            document.getElementById('orderDetails').innerHTML = '<p>Order ID: <strong>#' + orderId + '</strong><br>Total Paid: <strong>$' + total + '</strong></p>';
+        }
+
+        // Send SMS notification to the shop owner
+        if (orderId && total) {
+            fetch('/api/notify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ order_id: orderId, total: total })
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                var badge = document.getElementById('smsBadge');
+                if (data.success) {
+                    badge.innerHTML = '<span class="sms-badge">✅ Shop owner notified via SMS</span>';
+                } else {
+                    badge.innerHTML = '<span class="sms-badge error">⚠️ SMS notification pending</span>';
+                }
+            })
+            .catch(function() {
+                document.getElementById('smsBadge').innerHTML = '<span class="sms-badge error">⚠️ SMS notification pending</span>';
+            });
         }
     </script>
 </body>
