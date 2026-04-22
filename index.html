@@ -27,16 +27,19 @@ nav a { color: #fff; font-weight: 600; font-size: .95rem; opacity: .9; transitio
 .game-promo { display: inline-flex; align-items: center; gap: 10px; background: #fff; border: 2px solid var(--amber); padding: 12px 24px; border-radius: 28px; text-decoration: none; font-weight: 800; color: var(--amber-dark); }
 
 .section { max-width: 1200px; margin: 0 auto; padding: 40px 24px; }
-.products { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
+.products { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
 .product-card { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; border: 1px solid var(--border); transition: transform 0.2s; }
-.product-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,.12); }
-.product-emoji { font-size: 4rem; text-align: center; padding: 30px 0; background: var(--honey); }
-.product-img-wrap { width: 100%; height: 240px; overflow: hidden; background: var(--honey); }
-.product-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease; }
-.product-card:hover .product-img-wrap img { transform: scale(1.05); }
+.product-card:hover { transform: translateY(-4px); }
+
+/* Cinematic image tile */
+.product-img-wrap { width: 100%; height: 260px; overflow: hidden; background: var(--honey); }
+.product-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.35s ease; }
+.product-card:hover .product-img-wrap img { transform: scale(1.04); }
+
 .product-body { padding: 20px; text-align: center; }
-.price { font-size: 1.3rem; font-weight: 800; color: var(--amber-dark); }
-.add-btn { background: var(--amber); color: #fff; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 700; cursor: pointer; width: 100%; transition: background 0.2s; }
+.product-body h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; }
+.price { font-size: 1.3rem; font-weight: 800; color: var(--amber-dark); margin-bottom: 14px; }
+.add-btn { background: var(--amber); color: #fff; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 700; cursor: pointer; width: 100%; font-size: 1rem; transition: background 0.2s; }
 .add-btn:hover { background: var(--amber-dark); }
 
 .overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:200; }
@@ -88,28 +91,40 @@ nav a { color: #fff; font-weight: 600; font-size: .95rem; opacity: .9; transitio
 
 <script>
 const products = [
-  {id: 'wf-16', name: 'Wildflower Honey', price: 14.99, image: '🌸'},
-  {id: 'cl-16', name: 'Clover Honey', price: 12.99, image: '🍀'},
-  {id: 'mk-8', name: 'M\u0101nuka Honey', price: 29.99, image: '🌿'},
-  {id: 'gb-1', name: 'Honey Gift Box', price: 39.99, image: '🎁'},
-  {id: 'cc-honey', name: 'Cinnamon Creamed Honey', price: 10.00, image: 'https://static.prod-images.emergentagent.com/jobs/b4e5c5f2-3270-40a4-b1ff-a5905f7fc9ba/images/8347f2396f00810190f63aebc5d1dda28cb78689feadfd25934ec1cc7338b41e.jpeg'},
-  {id: 'mc-honey', name: 'Maple Creamed Honey', price: 10.00, image: 'https://static.prod-images.emergentagent.com/jobs/b4e5c5f2-3270-40a4-b1ff-a5905f7fc9ba/images/0c32be04c6e4cc92d43191277c297f911859ecc8d9db86137df39f43457ebb5c.jpeg'},
-  {id: 'pc-honey', name: 'Plain Creamed Honey', price: 10.00, image: 'https://static.prod-images.emergentagent.com/jobs/b4e5c5f2-3270-40a4-b1ff-a5905f7fc9ba/images/08af6ef86ecf5a07f66e9aa9b6af0bf1bc430b2c60da74b0d3f938fa2f70c654.jpeg'},
-  {id: 'ph-honey', name: 'Pure Honey', price: 10.00, image: 'https://static.prod-images.emergentagent.com/jobs/b4e5c5f2-3270-40a4-b1ff-a5905f7fc9ba/images/37f4faadf918542259a77f61a8a52e9890181852edba6ea75acd3b001802a44a.jpeg'}
+  {
+    id: 'plain-creamed',
+    name: 'Plain Creamed Honey',
+    price: 10.00,
+    image: 'https://customer-assets.emergentagent.com/wingman/b4e5c5f2-3270-40a4-b1ff-a5905f7fc9ba/attachments/a7f1a3068e4c4493a74288005391c53e_image.png'
+  },
+  {
+    id: 'pure-honey',
+    name: 'Pure Honey',
+    price: 10.00,
+    image: 'https://customer-assets.emergentagent.com/wingman/b4e5c5f2-3270-40a4-b1ff-a5905f7fc9ba/attachments/8a2e99d19a4e40288828ec4b953d6067_image.png'
+  },
+  {
+    id: 'maple-creamed',
+    name: 'Maple Creamed Honey',
+    price: 10.00,
+    image: 'https://customer-assets.emergentagent.com/wingman/b4e5c5f2-3270-40a4-b1ff-a5905f7fc9ba/attachments/8f921609121a4f009e4511677335d045_image.png'
+  },
+  {
+    id: 'cinnamon-creamed',
+    name: 'Cinnamon Creamed Honey',
+    price: 10.00,
+    image: 'https://customer-assets.emergentagent.com/wingman/b4e5c5f2-3270-40a4-b1ff-a5905f7fc9ba/attachments/87504e0e5a9544e99f067759868778f6_image.png'
+  }
 ];
 
 let cart = JSON.parse(localStorage.getItem('honeyCart') || '[]');
 
-function isUrl(str) {
-  return str.startsWith('http://') || str.startsWith('https://');
-}
-
 function renderProducts() {
   document.getElementById('productsGrid').innerHTML = products.map(p => `
     <div class="product-card">
-      ${isUrl(p.image)
-        ? `<div class="product-img-wrap"><img src="${p.image}" alt="${p.name}" loading="lazy"></div>`
-        : `<div class="product-emoji">${p.image}</div>`}
+      <div class="product-img-wrap">
+        <img src="${p.image}" alt="${p.name}" loading="lazy">
+      </div>
       <div class="product-body">
         <h3>${p.name}</h3>
         <p class="price">$${p.price.toFixed(2)}</p>
