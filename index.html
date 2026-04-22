@@ -90,25 +90,25 @@ const products = [
     id: 'plain-creamed',
     name: 'Plain Creamed Honey',
     price: 10.00,
-    image: 'https://customer-assets.emergentagent.com/wingman/b4e5c5f2-3270-40a4-b1ff-a5905f7fc9ba/attachments/a7f1a3068e4c4493a74288005391c53e_image.png'
+    image: 'https://static.prod-images.emergentagent.com/jobs/b4e5c5f2-3270-40a4-b1ff-a5905f7fc9ba/images/64b5f6915c117034563d507e033cee6e7bd424cf1390ada88b47f65fab6ee70f.jpeg'
   },
   {
     id: 'pure-honey',
     name: 'Pure Honey',
     price: 10.00,
-    image: 'https://customer-assets.emergentagent.com/wingman/b4e5c5f2-3270-40a4-b1ff-a5905f7fc9ba/attachments/8a2e99d19a4e40288828ec4b953d6067_image.png'
+    image: 'https://static.prod-images.emergentagent.com/jobs/b4e5c5f2-3270-40a4-b1ff-a5905f7fc9ba/images/f79fd6da13ed02b23d451c4e4b1ffe8032c9ecf10eaec033ab306b9008ed8cd1.jpeg'
   },
   {
     id: 'maple-creamed',
     name: 'Maple Creamed Honey',
     price: 10.00,
-    image: 'https://customer-assets.emergentagent.com/wingman/b4e5c5f2-3270-40a4-b1ff-a5905f7fc9ba/attachments/8f921609121a4f009e4511677335d045_image.png'
+    image: 'https://static.prod-images.emergentagent.com/jobs/b4e5c5f2-3270-40a4-b1ff-a5905f7fc9ba/images/9b4de3a0c9018412ba337243f58ade4a9da3a0bd1d3a67302d255ea7a2ce6ee7.jpeg'
   },
   {
     id: 'cinnamon-creamed',
     name: 'Cinnamon Creamed Honey',
     price: 10.00,
-    image: 'https://customer-assets.emergentagent.com/wingman/b4e5c5f2-3270-40a4-b1ff-a5905f7fc9ba/attachments/87504e0e5a9544e99f067759868778f6_image.png'
+    image: 'https://static.prod-images.emergentagent.com/jobs/b4e5c5f2-3270-40a4-b1ff-a5905f7fc9ba/images/288f11c38022d748a85dd0cac2b29bff44256a5c7a78172dec56e334ffb8fe09.jpeg'
   }
 ];
 
@@ -153,7 +153,6 @@ function removeFromCart(id) {
 }
 
 function updateCart() {
-  // Safeguard: remove items that no longer exist in the current products list
   cart = cart.filter(ci => products.some(p => p.id === ci.id));
   localStorage.setItem('honeyCart', JSON.stringify(cart));
   
@@ -176,7 +175,7 @@ function renderCart() {
   footer.style.display = 'block';
   container.innerHTML = cart.map(ci => {
     const p = products.find(pp => pp.id === ci.id);
-    if (!p) return ''; // Should be filtered out by updateCart but safe check
+    if (!p) return '';
     return `
       <div class="cart-item">
         <div><strong>${p.name}</strong><br>$${p.price.toFixed(2)}</div>
