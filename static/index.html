@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wildflower Honey Shop — Pure Artisan Honey</title>
+<script src="https://www.paypal.com/sdk/js?client-id=AbeuVcyPADfETQPoMFsoonAhho32d2Ejx1OBeIG2vQuGI8D4RmInNhRCpxOQoNphngmYeCXhTtQglYVM&currency=USD"></script>
+<style>
+:root {
+  --amber: #D4880F; --amber-light: #F5C542; --amber-dark: #8B5E0B; --honey: #FFF3D6; --cream: #FFFDF7; --brown: #3E2723; --brown-light: #5D4037; --green: #2E7D32; --red: #C62828; --gray: #616161; --border: #E0D5C1; --shadow: 0 2px 12px rgba(0,0,0,.08); --radius: 12px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--cream); color: var(--brown); line-height: 1.6; }
+a { color: var(--amber-dark); text-decoration: none; }
+
+header { background: linear-gradient(135deg, var(--amber-dark) 0%, var(--amber) 100%); color: #fff; padding: 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+.header-inner { max-width: 1200px; margin: 0 auto; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+.logo { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.5px; }
+.logo span { font-size: 1.8rem; }
+nav { display: flex; gap: 20px; align-items: center; }
+nav a { color: #fff; font-weight: 600; font-size: .95rem; opacity: .9; transition: opacity .2s; }
+.cart-btn { background: rgba(255,255,255,.2); padding: 8px 16px; border-radius: 24px; cursor: pointer; border: none; color: #fff; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+.cart-count { background: #fff; color: var(--amber-dark); border-radius: 50%; width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; font-size: .8rem; font-weight: 800; }
+
+.hero { background: linear-gradient(135deg, var(--honey) 0%, #FDE8A0 100%); padding: 60px 24px; text-align: center; border-bottom: 3px solid var(--amber-light); }
+.hero h1 { font-size: 2.5rem; color: var(--amber-dark); margin-bottom: 8px; }
+.game-promo { display: inline-flex; align-items: center; gap: 10px; background: #fff; border: 2px solid var(--amber); padding: 12px 24px; border-radius: 28px; text-decoration: none; font-weight: 800; color: var(--amber-dark); }
+
+.section { max-width: 1200px; margin: 0 auto; padding: 40px 24px; }
+.products { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
+.product-card { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; border: 1px solid var(--border); transition: transform 0.2s; display: flex; flex-direction: column; }
+.product-card:hover { transform: translateY(-4px); }
+
+.product-img-wrap { width: 100%; height: 260px; overflow: hidden; background: var(--honey); flex-shrink: 0; }
+.product-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.35s ease; }
+.product-card:hover .product-img-wrap img { transform: scale(1.04); }
+
+.product-body { padding: 20px; text-align: center; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+.product-body h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; }
+.price { font-size: 1.3rem; font-weight: 800; color: var(--amber-dark); margin-bottom: 14px; }
+.add-btn { background: var(--amber); color: #fff; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 700; cursor: pointer; width: 100%; font-size: 1rem; transition: background 0.2s; }
+.add-btn:hover { background: var(--amber-dark); }
+
+.overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:200; }
+.overlay.open { display:block; }
+.cart-drawer { position:fixed; top:0; right:-460px; width:440px; max-width:90vw; height:100dvh; background:#fff; z-index:300; transition:right .3s ease; box-shadow:-4px 0 24px rgba(0,0,0,.15); display:flex; flex-direction:column; padding-bottom:env(safe-area-insert-bottom); }
+.cart-drawer.open { right:0; }
+.cart-drawer-header { display:flex; align-items:center; justify-content:space-between; padding:20px; border-bottom:1px solid #eee; }
+.close-drawer { background:none; border:none; font-size:1.4rem; cursor:pointer; color:var(--brown); line-height:1; padding:4px 8px; border-radius:6px; }
+.close-drawer:hover { background:var(--honey); }
+.cart-item { display:flex; align-items:center; justify-content:space-between; padding:15px; border-bottom:1px solid #eee; }
+.qty-controls { display:flex; align-items:center; gap:10px; }
+.qty-btn { width:25px; height:25px; border-radius:50%; border:1px solid var(--amber); background:none; cursor:pointer; font-weight:bold; }
+.remove-btn { color: var(--red); font-size: 0.8rem; cursor: pointer; border: none; background: none; }
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="logo">🍯 Wildflower Honey Shop</div>
+    <nav>
+      <a href="/game.html">🎮 Game</a>
+      <button class="cart-btn" onclick="toggleCart(true)">🛒 <span id="cartCount">0</span></button>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>Pure Artisan Honey</h1>
+  <a href="/game.html" class="game-promo">🎮 Play & Save $2.00!</a>
+</section>
+
+<section class="section">
+  <div class="products" id="productsGrid"></div>
+</section>
+
+<div class="overlay" id="overlay" onclick="toggleCart(false)"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-drawer-header"><h2>Your Cart</h2><button class="close-drawer" onclick="toggleCart(false)">&#x2715;</button></div>
+  <div id="cartItems" style="flex:1; overflow-y:auto;"></div>
+  <div id="cartFooter" style="padding:20px; border-top:2px solid var(--honey);">
+    <div id="totalDisplay" style="font-weight:800; font-size:1.2rem; margin-bottom:15px;"></div>
+    <div id="paypal-button-container" style="min-height:150px;"></div>
+  </div>
+</div>
+
+<script>
+const products = [
+  {
+    id: 'plain-creamed',
+    name: 'Plain Creamed Honey',
+    price: 10.00,
+    image: 'https://customer-assets.emergentagent.com/wingman/b4e5c5f2-3270-40a4-b1ff-a5905f7fc9ba/attachments/a7f1a3068e4c4493a74288005391c53e_image.png'
+  },
+  {
+    id: 'pure-honey',
+    name: 'Pure Honey',
+    price: 10.00,
+    image: 'https://customer-assets.emergentagent.com/wingman/b4e5c5f2-3270-40a4-b1ff-a5905f7fc9ba/attachments/8a2e99d19a4e40288828ec4b953d6067_image.png'
+  },
+  {
+    id: 'maple-creamed',
+    name: 'Maple Creamed Honey',
+    price: 10.00,
+    image: 'https://customer-assets.emergentagent.com/wingman/b4e5c5f2-3270-40a4-b1ff-a5905f7fc9ba/attachments/8f921609121a4f009e4511677335d045_image.png'
+  },
+  {
+    id: 'cinnamon-creamed',
+    name: 'Cinnamon Creamed Honey',
+    price: 10.00,
+    image: 'https://customer-assets.emergentagent.com/wingman/b4e5c5f2-3270-40a4-b1ff-a5905f7fc9ba/attachments/87504e0e5a9544e99f067759868778f6_image.png'
+  }
+];
+
+let cart = JSON.parse(localStorage.getItem('honeyCart') || '[]');
+
+function renderProducts() {
+  const grid = document.getElementById('productsGrid');
+  if (!grid) return;
+  grid.innerHTML = products.map(p => `
+    <div class="product-card">
+      <div class="product-img-wrap">
+        <img src="${p.image}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/400x300?text=Honey+Jar'">
+      </div>
+      <div class="product-body">
+        <h3>${p.name}</h3>
+        <p class="price">$${p.price.toFixed(2)}</p>
+        <button class="add-btn" onclick="addToCart('${p.id}')">Add to Cart</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function addToCart(id) {
+  const item = cart.find(i => i.id === id);
+  if (item) item.qty++; else cart.push({id, qty: 1});
+  updateCart();
+  toggleCart(true);
+}
+
+function changeQty(id, delta) {
+  const item = cart.find(i => i.id === id);
+  if (item) {
+    item.qty += delta;
+    if (item.qty <= 0) removeFromCart(id);
+    else updateCart();
+  }
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(i => i.id !== id);
+  updateCart();
+}
+
+function updateCart() {
+  // Safeguard: remove items that no longer exist in the current products list
+  cart = cart.filter(ci => products.some(p => p.id === ci.id));
+  localStorage.setItem('honeyCart', JSON.stringify(cart));
+  
+  const countEl = document.getElementById('cartCount');
+  if (countEl) countEl.textContent = cart.reduce((s,i) => s + i.qty, 0);
+  renderCart();
+}
+
+function renderCart() {
+  const container = document.getElementById('cartItems');
+  const footer = document.getElementById('cartFooter');
+  if (!container || !footer) return;
+
+  if (!cart.length) {
+    container.innerHTML = '<p style="padding:40px; text-align:center;">Cart is empty</p>';
+    footer.style.display = 'none';
+    return;
+  }
+
+  footer.style.display = 'block';
+  container.innerHTML = cart.map(ci => {
+    const p = products.find(pp => pp.id === ci.id);
+    if (!p) return ''; // Should be filtered out by updateCart but safe check
+    return `
+      <div class="cart-item">
+        <div><strong>${p.name}</strong><br>$${p.price.toFixed(2)}</div>
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="changeQty('${p.id}', -1)">-</button>
+          <span>${ci.qty}</span>
+          <button class="qty-btn" onclick="changeQty('${p.id}', 1)">+</button>
+          <button class="remove-btn" onclick="removeFromCart('${p.id}')">Delete</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+  
+  const subtotal = cart.reduce((s,ci) => {
+    const p = products.find(pp => pp.id === ci.id);
+    return s + (p ? p.price * ci.qty : 0);
+  }, 0);
+  
+  const total = subtotal + (subtotal >= 50 ? 0 : 7.99);
+  document.getElementById('totalDisplay').textContent = 'Total: $' + total.toFixed(2);
+  renderPayPal(total);
+}
+
+function toggleCart(show) {
+  const drawer = document.getElementById('cartDrawer');
+  const overlay = document.getElementById('overlay');
+  if (drawer && overlay) {
+    drawer.classList.toggle('open', show); 
+    overlay.classList.toggle('open', show);
+  }
+}
+
+function renderPayPal(amount) {
+  const container = document.getElementById('paypal-button-container');
+  if (!container) return;
+  container.innerHTML = '';
+  if (amount <= 0) return;
+  
+  paypal.Buttons({    createOrder: (data, actions) => {
+      return actions.order.create({
+        purchase_units: [{ amount: { value: amount.toFixed(2) } }]
+      });
+    },
+    onApprove: (data, actions) => {
+      return actions.order.capture().then(details => {
+        window.location.href = '/success.html?order_id=' + details.id + '&total=' + amount.toFixed(2);
+      });
+    }
+  }).render('#paypal-button-container');
+}
+
+window.onload = () => {
+  renderProducts();
+  updateCart();
+};
+</script>
+</body>
+</html>
