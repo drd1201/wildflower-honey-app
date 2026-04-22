@@ -215,8 +215,7 @@ function renderPayPal(amount) {
   container.innerHTML = '';
   if (amount <= 0) return;
   
-  paypal.Buttons({
-    createOrder: (data, actions) => {
+  paypal.Buttons({    createOrder: (data, actions) => {
       return actions.order.create({
         purchase_units: [{ amount: { value: amount.toFixed(2) } }]
       });
