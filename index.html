@@ -28,15 +28,14 @@ nav a { color: #fff; font-weight: 600; font-size: .95rem; opacity: .9; transitio
 
 .section { max-width: 1200px; margin: 0 auto; padding: 40px 24px; }
 .products { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
-.product-card { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; border: 1px solid var(--border); transition: transform 0.2s; }
+.product-card { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; border: 1px solid var(--border); transition: transform 0.2s; display: flex; flex-direction: column; }
 .product-card:hover { transform: translateY(-4px); }
 
-/* Cinematic image tile */
-.product-img-wrap { width: 100%; height: 260px; overflow: hidden; background: var(--honey); }
+.product-img-wrap { width: 100%; height: 260px; overflow: hidden; background: var(--honey); flex-shrink: 0; }
 .product-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.35s ease; }
 .product-card:hover .product-img-wrap img { transform: scale(1.04); }
 
-.product-body { padding: 20px; text-align: center; }
+.product-body { padding: 20px; text-align: center; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
 .product-body h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; }
 .price { font-size: 1.3rem; font-weight: 800; color: var(--amber-dark); margin-bottom: 14px; }
 .add-btn { background: var(--amber); color: #fff; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 700; cursor: pointer; width: 100%; font-size: 1rem; transition: background 0.2s; }
@@ -53,10 +52,6 @@ nav a { color: #fff; font-weight: 600; font-size: .95rem; opacity: .9; transitio
 .qty-controls { display:flex; align-items:center; gap:10px; }
 .qty-btn { width:25px; height:25px; border-radius:50%; border:1px solid var(--amber); background:none; cursor:pointer; font-weight:bold; }
 .remove-btn { color: var(--red); font-size: 0.8rem; cursor: pointer; border: none; background: none; }
-
-.modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:400; align-items:center; justify-content:center; }
-.modal.open { display:flex; }
-.modal-content { background:#fff; padding:30px; border-radius:12px; width:90%; max-width:500px; }
 </style>
 </head>
 <body>
@@ -120,10 +115,12 @@ const products = [
 let cart = JSON.parse(localStorage.getItem('honeyCart') || '[]');
 
 function renderProducts() {
-  document.getElementById('productsGrid').innerHTML = products.map(p => `
+  const grid = document.getElementById('productsGrid');
+  if (!grid) return;
+  grid.innerHTML = products.map(p => `
     <div class="product-card">
       <div class="product-img-wrap">
-        <img src="${p.image}" alt="${p.name}" loading="lazy">
+        <img src="${p.image}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/400x300?text=Honey+Jar'">
       </div>
       <div class="product-body">
         <h3>${p.name}</h3>
@@ -156,21 +153,30 @@ function removeFromCart(id) {
 }
 
 function updateCart() {
+  // Safeguard: remove items that no longer exist in the current products list
+  cart = cart.filter(ci => products.some(p => p.id === ci.id));
   localStorage.setItem('honeyCart', JSON.stringify(cart));
-  document.getElementById('cartCount').textContent = cart.reduce((s,i) => s + i.qty, 0);
+  
+  const countEl = document.getElementById('cartCount');
+  if (countEl) countEl.textContent = cart.reduce((s,i) => s + i.qty, 0);
   renderCart();
 }
 
 function renderCart() {
   const container = document.getElementById('cartItems');
+  const footer = document.getElementById('cartFooter');
+  if (!container || !footer) return;
+
   if (!cart.length) {
-    container.innerHTML = '<p style="padding:40px;">Cart is empty</p>';
-    document.getElementById('cartFooter').style.display = 'none';
+    container.innerHTML = '<p style="padding:40px; text-align:center;">Cart is empty</p>';
+    footer.style.display = 'none';
     return;
   }
-  document.getElementById('cartFooter').style.display = 'block';
+
+  footer.style.display = 'block';
   container.innerHTML = cart.map(ci => {
     const p = products.find(pp => pp.id === ci.id);
+    if (!p) return ''; // Should be filtered out by updateCart but safe check
     return `
       <div class="cart-item">
         <div><strong>${p.name}</strong><br>$${p.price.toFixed(2)}</div>
@@ -184,18 +190,31 @@ function renderCart() {
     `;
   }).join('');
   
-  const subtotal = cart.reduce((s,ci) => s + (products.find(p=>p.id===ci.id).price * ci.qty), 0);
-  document.getElementById('totalDisplay').textContent = 'Total: $' + (subtotal + (subtotal >= 50 ? 0 : 7.99)).toFixed(2);
-  renderPayPal(subtotal + (subtotal >= 50 ? 0 : 7.99));
+  const subtotal = cart.reduce((s,ci) => {
+    const p = products.find(pp => pp.id === ci.id);
+    return s + (p ? p.price * ci.qty : 0);
+  }, 0);
+  
+  const total = subtotal + (subtotal >= 50 ? 0 : 7.99);
+  document.getElementById('totalDisplay').textContent = 'Total: $' + total.toFixed(2);
+  renderPayPal(total);
 }
 
 function toggleCart(show) {
-  document.getElementById('cartDrawer').classList.toggle('open', show);
-  document.getElementById('overlay').classList.toggle('open', show);
+  const drawer = document.getElementById('cartDrawer');
+  const overlay = document.getElementById('overlay');
+  if (drawer && overlay) {
+    drawer.classList.toggle('open', show); 
+    overlay.classList.toggle('open', show);
+  }
 }
 
 function renderPayPal(amount) {
-  document.getElementById('paypal-button-container').innerHTML = '';
+  const container = document.getElementById('paypal-button-container');
+  if (!container) return;
+  container.innerHTML = '';
+  if (amount <= 0) return;
+  
   paypal.Buttons({
     createOrder: (data, actions) => {
       return actions.order.create({
@@ -210,8 +229,10 @@ function renderPayPal(amount) {
   }).render('#paypal-button-container');
 }
 
-renderProducts();
-updateCart();
+window.onload = () => {
+  renderProducts();
+  updateCart();
+};
 </script>
 </body>
 </html>
