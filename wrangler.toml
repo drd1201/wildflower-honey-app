@@ -1,0 +1,10 @@
+name = "wildflower-honey-app"
+main = "functions/api/notify.js"
+compatibility_date = "2024-01-01"
+
+[vars]
+# Environment variables are set in Cloudflare dashboard
+
+[[routes]]
+pattern = "/api/notify"
+zone_name = "wildflowerhoney.shop.buzzsmart.org"
