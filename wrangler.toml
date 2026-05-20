@@ -1,3 +1,1 @@
 name = "wildflower-honey-app"
-main = "functions/api/notify.js"
-compatibility_date = "2024-01-01"
