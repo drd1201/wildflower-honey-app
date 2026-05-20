@@ -91,9 +91,10 @@ nav a { color: #fff; font-weight: 600; font-size: .95rem; opacity: .9; transitio
 
     if (orderId && total) {
         emailjs.send("service_z1fu5kp", "h9lagy8", {
-            to_email: "3184231053@vtext.com",
-            subject: "New Honey Order",
-            message: "New order! ID: " + orderId + " — Total: $" + total + ". Check dashboard."
+       name: "Wildflower Honey Shop",
+time: new Date().toLocaleString(),
+message: "New order! ID: " + orderId + " — Total: $" + total + ". Check dashboard.",
+email: "support@wildflowerhoney.shop"
         })
         .then(function() {
             var badge = document.getElementById('smsBadge');
