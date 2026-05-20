@@ -69,45 +69,44 @@ nav a { color: #fff; font-weight: 600; font-size: .95rem; opacity: .9; transitio
 
   <p class="note">A confirmation email will be sent to your PayPal email address.<br>Questions? Email us at <strong>support@wildflowerhoney.shop</strong></p>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <script>
 (function() {
-  var params = new URLSearchParams(window.location.search);
-  var orderId = params.get('order_id');
-  var total = params.get('total');
+    emailjs.init("hXopRJAe02pRT-5XL");
 
-  if (orderId) {
-    document.getElementById('orderId').textContent = orderId;
-  }
-  if (total) {
-    var amount = parseFloat(total);
-    document.getElementById('orderTotal').textContent = isNaN(amount) ? total : '$' + amount.toFixed(2);
-  }
+    var params = new URLSearchParams(window.location.search);
+    var orderId = params.get('order_id');
+    var total = params.get('total');
 
-  // Clear the cart after successful purchase
-  try { localStorage.removeItem('honeyCart'); } catch(e) {}
+    if (orderId) {
+        document.getElementById('orderId').textContent = orderId;
+    }
+    if (total) {
+        var amount = parseFloat(total);
+        document.getElementById('orderTotal').textContent = '$' + amount.toFixed(2);
+    }
 
-  // Send SMS notification to the shop owner
-  if (orderId && total) {
-    fetch('/api/notify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ order_id: orderId, total: total })
-    })
-    .then(function(res) { return res.json(); })
-    .then(function(data) {
-      var badge = document.getElementById('smsBadge');
-      if (data.success) {
-        badge.innerHTML = '<span class="sms-badge">📱 Shop owner notified via SMS</span>';
-      } else {
-        badge.innerHTML = '<span class="sms-badge error">⚠️ SMS notification pending</span>';
-      }
-    })
-    .catch(function() {
-      document.getElementById('smsBadge').innerHTML = '<span class="sms-badge error">⚠️ SMS notification pending</span>';
-    });
-  }
+    // Clear the cart after successful purchase
+    localStorage.removeItem('cart');
+
+    if (orderId && total) {
+        emailjs.send("service_z1fu5kp", "h9lagy8", {
+            to_email: "3184231053@vtext.com",
+            subject: "New Honey Order",
+            message: "New order! ID: " + orderId + " — Total: $" + total + ". Check dashboard."
+        })
+        .then(function() {
+            var badge = document.getElementById('smsBadge');
+            badge.innerHTML = '<span class="sms-badge">✅ Shop owner notified</span>';
+        })
+        .catch(function(error) {
+            console.error("EmailJS error:", error);
+            var badge = document.getElementById('smsBadge');
+            badge.innerHTML = '<span class="sms-badge error">⚠️ SMS notification pending</span>';
+        });
+    }
 })();
 </script>
+
 </body>
 </html>
