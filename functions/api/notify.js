@@ -1,6 +1,3 @@
-// functions/api/notify.js
-// Free SMS via Verizon email-to-text gateway (no Twilio needed)
-
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
@@ -20,10 +17,6 @@ export async function onRequestPost(context) {
       );
     }
 
-    // Keith's Verizon number — email-to-text gateway (free, no account needed)
-    const keithSMS = "3184231053@vtext.com";
-
-    // EmailJS credentials from environment variables
     const emailjsServiceId  = env.EMAILJS_SERVICE_ID;
     const emailjsTemplateId = env.EMAILJS_TEMPLATE_ID;
     const emailjsPublicKey  = env.EMAILJS_PUBLIC_KEY;
@@ -40,7 +33,7 @@ export async function onRequestPost(context) {
       template_id: emailjsTemplateId,
       user_id:     emailjsPublicKey,
       template_params: {
-        to_email: keithSMS,
+        to_email: "3184231053@vtext.com",
         subject:  "New Honey Order",
         message:  `New order! ID: ${order_id} — Total: $${total}. Check dashboard.`,
       },
